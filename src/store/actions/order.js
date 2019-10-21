@@ -1,6 +1,13 @@
 import * as actionType from './actionTypes';
 import axios from '../../axios-orders';
 
+
+export const purchaseInit = () => {
+    return {
+        type: actionType.PURCHASE_INIT
+    }
+}
+
 export const purchaseBurgerSuccess = (id, order) => {
     return {
         type: actionType.PURCHASE_BURGER_SUCCESS,
@@ -32,5 +39,45 @@ export const purchaseBurgerStart = (orderData) => {
             .catch(err => {
                 dispatch(purchaseBurgerFail(err))
             })
+    }
+}
+
+export const fetchOrdersSuccess = (orders) => {
+    return {
+        type: actionType.FETCH_ORDERS_SUCCESS,
+        orders: orders
+    };
+};
+
+export const fetchOrdersFail = (error) => {
+    return {
+        type: actionType.FETCH_ORDERS_FAIL,
+        error: error
+    };
+};
+
+export const fetchOrdersInit = () => {
+    return {
+        type: actionType.FETCH_ORDERS_INIT
+    };
+};
+
+export const fetchOrders = () => {
+    return dispatch => {
+        dispatch(fetchOrdersInit());
+        axios.get('/orders.json')
+        .then(res => {
+            const fetchedOrders = [];
+            for (let key in res.data) {
+                fetchedOrders.push({
+                    ...res.data[key],
+                    id: key
+                });
+            }
+            dispatch(fetchOrdersSuccess(fetchedOrders));
+        })
+        .catch(err => {
+            dispatch(fetchOrdersFail(err));
+        })
     }
 }
