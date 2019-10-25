@@ -17,7 +17,6 @@ const reducer = (state = initialState, action) => {
             const newOrder = updateObject(action.orderData, {
                 id: action.orderId
             });
-            console.log(state);
             return updateObject(state, {
                 orders: state.orders.concat(newOrder),
                 loading: false,
